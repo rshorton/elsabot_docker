@@ -1,0 +1,38 @@
+These files are used to build a ROS docker for the Elsabot robot.
+
+To build docker, in the robot_ws directory run:
+
+  docker/build_ros_docker.sh
+
+To run the created docker, in the robot_ws directory run:
+
+  docker/run_ros_docker.sh
+
+This will open a shell inside the docker container.  To build a list of the packages required for building the
+Elsabot packages, run:
+
+  docker/build_ros_deps_for_docker.sh
+
+The update the ROS docker with those dependent packages, run:
+
+  docker/build_ros_docker.sh
+
+This will install those packages in the image.  Run the docker again, and then build the Elsabot packages.  
+
+micros_ros related
+  See:
+    https://github.com/micro-ROS/micro_ros_setup/blob/jazzy/README.md
+
+  Steps (run in docker):
+    cd /robot_ws
+    git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
+    rosdep update && rosdep install --from-paths src --ignore-src -y
+    colcon build --packages-select micro_ros_setup
+    source install/local_setup.bash
+
+    Build the microros agent:
+      ros2 run micro_ros_setup create_agent_ws.sh
+      ros2 run micro_ros_setup build_agent.sh
+
+  For Elsabot firmware for the Arduino controller, see https://github.com/rshorton/linorobot2_hardware
+

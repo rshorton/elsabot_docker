@@ -1,0 +1,3 @@
+if [ -e /robot_ws/robot.env ]; then
+  . /robot_ws/robot.env
+fi	
