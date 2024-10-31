@@ -36,3 +36,12 @@ micros_ros related
 
   For Elsabot firmware for the Arduino controller, see https://github.com/rshorton/linorobot2_hardware
 
+10/10/2024
+
+Needed to build rosbridge_suite from source due to issue related to Jazzy.
+  cd src 
+  git clone https://github.com/RobotWebTools/rosbridge_suite.git
+  rosdep update
+  rosdep install --from-paths src --ignore-src -r -y
+  colcon build
+  
