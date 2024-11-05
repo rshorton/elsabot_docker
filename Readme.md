@@ -1,29 +1,41 @@
+# Elsabot ROS2 Jazzy Docker Environment
+
 These files are used to build a ROS docker for the Elsabot robot.
 
-To build docker, in the robot_ws directory run:
+Clone this repo under your ROS work space directory.  Ex:
+ - robot_ws
+     - elsabot_docker
 
-  docker/build_ros_docker.sh
+To build the docker image, in the robot_ws directory run:
+```
+elsabot_docker/build_ros_docker.sh
+```
 
 To run the created docker, in the robot_ws directory run:
+````
+  elsabot_docker/run_ros_docker.sh
+````
 
-  docker/run_ros_docker.sh
+This will open a shell inside the docker container.  The shell inside the container will automatically source the file elsabot_docker/robot.env.  Revise that file to export any Environment variables you need.  It will also source the ROS workspace install directory and the elsabot_docker/device_env_vars.env.
 
-This will open a shell inside the docker container.  To build a list of the packages required for building the
-Elsabot packages, run:
+To build a list of the ROS dep packages required for building the Elsabot packages, run:
+```
+  elsabot_docker/build_ros_deps_for_docker.sh
+```
 
-  docker/build_ros_deps_for_docker.sh
+To update the ROS docker with those dependent packages, run:
+```
+  elsabot_docker/build_ros_docker.sh
+```
 
-The update the ROS docker with those dependent packages, run:
-
-  docker/build_ros_docker.sh
-
-This will install those packages in the image.  Run the docker again, and then build the Elsabot packages.  
+This will install those packages in the image.  After it finishes, run the docker again, and then build the Elsabot packages.  
 
 micros_ros related
   See:
     https://github.com/micro-ROS/micro_ros_setup/blob/jazzy/README.md
 
   Steps (run in docker):
+
     cd /robot_ws
     git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
     rosdep update && rosdep install --from-paths src --ignore-src -y

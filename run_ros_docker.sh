@@ -13,7 +13,9 @@
 #   launch scripts.
 # /dev/input is mapped so /dev/input/js0 is available.
 # /dev/bus/usb and cgroup rule for Oakd device
+# Sound devices for speech_input_server and speech_output_server projects.
 
+# FIX, is privileged still needed?
 docker run -it --privileged --net=host  --pid=host --ipc=host \
   -e DISPLAY=unix:0 \
   -v ~/robot_ws:/robot_ws \

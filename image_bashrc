@@ -1,3 +1,5 @@
-if [ -e /robot_ws/robot.env ]; then
-  . /robot_ws/robot.env
+# The .bashrc used in the container
+
+if [ -e /robot_ws/elsabot_docker/robot.env ]; then
+  source /robot_ws/elsabot_docker/robot.env
 fi	

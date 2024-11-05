@@ -1,4 +1,5 @@
 #!/bin/bash
+# Open a shell into the already running Elsabot container.  Use run_ros_docker.sh first.
 
 IMAGE_NAME=elsabot/jazzy
 
