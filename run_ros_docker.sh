@@ -18,7 +18,7 @@
 # FIX, is privileged still needed?
 docker run -it --privileged --net=host  --pid=host --ipc=host \
   -e DISPLAY=unix:0 \
-  -v ~/robot_ws:/robot_ws \
+  -v ../:/robot_ws \
   -v /dev/elsabot_dev_links:/dev/elsabot_dev_links \
   -v /dev/input:/dev/input \
   -v /dev/i2c-0:/dev/i2c-0 \
