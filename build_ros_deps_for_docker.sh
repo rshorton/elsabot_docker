@@ -15,3 +15,4 @@ sed -i -e 's/get install/get install -y/g' $ROS_DEPS_INSTALL_SCRIPT
 
 chmod +x $ROS_DEPS_INSTALL_SCRIPT
 echo "Built ros dep install script for use by the Docker build file."
+echo "You should now exit the container, and then rerun the docker build script."

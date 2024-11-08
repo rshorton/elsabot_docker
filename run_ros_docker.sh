@@ -15,10 +15,14 @@
 # /dev/bus/usb and cgroup rule for Oakd device
 # Sound devices for speech_input_server and speech_output_server projects.
 
+SCRIPT_DIR=$(dirname "$0")
+WS_DIR=$(readlink -f ${SCRIPT_DIR}/..)
+echo "WS_DIR = $WS_DIR"
+
 # FIX, is privileged still needed?
 docker run -it --privileged --net=host  --pid=host --ipc=host \
   -e DISPLAY=unix:0 \
-  -v ../:/robot_ws \
+  -v ${WS_DIR}:/robot_ws \
   -v /dev/elsabot_dev_links:/dev/elsabot_dev_links \
   -v /dev/input:/dev/input \
   -v /dev/i2c-0:/dev/i2c-0 \
