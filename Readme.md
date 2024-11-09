@@ -27,6 +27,10 @@ micro_ros is used so clone it also:
 git clone -b jazzy https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
 ```
 
+As an alternative to the above, use the get_elsabot_repos.sh script from
+the *elsabot* repo git@github.com:rshorton/elsabot.git
+to clone all the necessary repos.
+
 ## Build the docker image
 
 Run:
@@ -76,12 +80,3 @@ ros2 run micro_ros_setup build_agent.sh
 
 For the Elsabot firmware for the Arduino controller, see https://github.com/rshorton/linorobot2_hardware
 
-10/10/2024
-
-Needed to build rosbridge_suite from source due to issue related to Jazzy.
-  cd src 
-  git clone https://github.com/RobotWebTools/rosbridge_suite.git
-  rosdep update
-  rosdep install --from-paths src --ignore-src -r -y
-  colcon build
-  
