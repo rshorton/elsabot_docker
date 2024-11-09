@@ -1,13 +1,13 @@
 # Elsabot ROS2 Jazzy Docker Environment
 
-This repo contains file to build and run a ROS docker container for the Elsabot robot.
+This repo contains files to build and run a ROS docker container for the Elsabot robot.
 
 ## Prepare source
 
 Create a ROS workspace directory (such as robot_ws):
 
 ```
-mkdir -p ~robot_ws/src
+mkdir -p ~/robot_ws/src
 ```
 and clone this repo under it.
 
@@ -20,7 +20,7 @@ You should have:
      - src
      - elsabot_docker
 
-Clone any other repos needed such as elsabot_wd and its dependencies in the src folder.
+Clone any other repos needed such as elsabot_4wd and its dependencies in the src folder.
  
 micro_ros is used so clone it also:
 ```
@@ -35,6 +35,7 @@ to clone all the necessary repos.
 
 Run:
 ```
+cd ~/robot_ws
 elsabot_docker/build_ros_docker.sh
 ```
 
@@ -44,6 +45,7 @@ This will take a while to build the docker image.
 ## Create and open a shell in the container:
 
 ````
+cd ~/robot_ws
 elsabot_docker/run_ros_docker.sh
 ````
 
@@ -60,7 +62,7 @@ exit
 elsabot_docker/build_ros_docker.sh
 ```
 
-This will install the dependencies into the image.  After it finishes, run the docker again, and then build the Elsabot packages (using a convenience alias):
+This will install the dependencies into the image.  After it finishes, run the docker again, and then build the Elsabot packages (ros2_build is a convenience alias):
 
 ```
 ros2_build
