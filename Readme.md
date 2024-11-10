@@ -38,7 +38,10 @@ Run:
 cd ~/robot_ws
 elsabot_docker/build_ros_docker.sh
 ```
-
+To build for arm64 specify the -a option.
+```
+elsabot_docker/build_ros_docker.sh -a
+```
 This will take a while to build the docker image.
 
 
