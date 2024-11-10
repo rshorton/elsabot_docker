@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE_NAME=elsabot/jazzy
-SUPPORT_ARM=false
+SUPPORT_ARM=n
 
 NO_CACHE_ARG=""
 while getopts ":hna" option; do
@@ -14,7 +14,7 @@ while getopts ":hna" option; do
          NO_CACHE_ARG="--no-cache"
          ;;
       a) # Build for ARMv64 (rpi)
-         SUPPORT_ARM=true
+         SUPPORT_ARM=y
          ;;
      \?) # Invalid option
          echo "Error: Invalid option"
@@ -37,11 +37,11 @@ if [ ! -e $ROS_DEPS_INSTALL_SCRIPT ]; then
   chmod +x $ROS_DEPS_INSTALL_SCRIPT
 fi
 
-if [ $SUPPORT_ARM ]; then
-   BASE_IMAGE=arm64v8/ros:jazzy-ros-base
+if [ $SUPPORT_ARM == 'y' ]; then
+   BASE_IMAGE="arm64v8/ros:jazzy-ros-base"
    echo "Building for arm64"
 else
-   BASE_IMAGE=osrf/ros:jazzy-desktop-full
+   BASE_IMAGE="osrf/ros:jazzy-desktop-full"
    echo "Building for x86"
 fi   
 
