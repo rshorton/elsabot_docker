@@ -12,6 +12,7 @@ mkdir -p ~/robot_ws/src
 and clone this repo under it.
 
 ```
+cd ~/robot_ws
 git clone git@github.com:rshorton/elsabot_docker.git
 ```
 
@@ -85,3 +86,53 @@ ros2 run micro_ros_setup build_agent.sh
 
 For the Elsabot firmware for the Arduino controller, see https://github.com/rshorton/linorobot2_hardware
 
+## ROS Foxglove Bridge
+
+### Install
+
+Install using the Foxglove-provided ROS package if available using:
+
+```
+sudo apt install ros-$ROS_DISTRO-foxglove-bridge
+```
+
+### Build
+
+Since no package available for jazzy, build it from source.  Use the steps below for this docker.  Here's a link to the directions: https://github.com/foxglove/foxglove-sdk/tree/main/ros/src/foxglove_bridge#install
+
+
+Open a shell into the docker container:
+
+```
+cd ~/robot_ws
+elsabot_docker/run_ros_docker.sh
+```
+
+Clone and build the source
+
+```
+git clone https://github.com/foxglove/foxglove-sdk
+cd foxglove-sdk/ros
+make
+```
+
+### Run
+
+```
+cd ~/robot_ws
+source foxglove-sdk/ros/install/local_setup.bash
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml port:=8765
+```
+
+### Open Foxgove dashboard
+
+Browse to
+
+```
+https://app.foxglove.dev/<your user name>/dashboard
+```
+Select Open Connection from the drop-down menu and specify the connection url such as:
+
+```
+ws://your_robot_ip_address:8765
+```
