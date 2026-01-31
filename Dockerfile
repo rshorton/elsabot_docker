@@ -3,6 +3,7 @@ FROM ${BASE_IMAGE}
 ARG USERNAME=USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+ARG ROS_DISTRO=jazzy
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
@@ -19,16 +20,19 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
 
+# libg2o - needed when building/using Nav2 TEB controller
 RUN apt-get install -y \
-    ros-jazzy-navigation2 \
-    ros-jazzy-moveit \
-    ros-jazzy-nav2-bringup \
-    ros-jazzy-rplidar-ros \
-    ros-jazzy-laser-filters \
-    ros-jazzy-robot-localization \
-    ros-jazzy-joy-linux \
-    ros-jazzy-ros2-control \
-    ros-jazzy-ros2-controllers
+    ros-${ROS_DISTRO}-navigation2 \
+    ros-${ROS_DISTRO}-moveit \
+    ros-${ROS_DISTRO}-nav2-bringup \
+    ros-${ROS_DISTRO}-rplidar-ros \
+    ros-${ROS_DISTRO}-laser-filters \
+    ros-${ROS_DISTRO}-robot-localization \
+    ros-${ROS_DISTRO}-joy-linux \
+    ros-${ROS_DISTRO}-ros2-control \
+    ros-${ROS_DISTRO}-ros2-controllers \
+    ros-${ROS_DISTRO}-vector-pursuit-controller \
+    ros-${ROS_DISTRO}-libg2o
 ENV SHELL=/bin/bash
 
 # For ros2_control so real-time process priorities can be used
@@ -64,7 +68,7 @@ RUN apt-get install -y python3-libgpiod gpiod python3-smbus python3-dev i2c-tool
 RUN addgroup gpio \
     && usermod -a -G gpio $USERNAME
 
-# Also needed by Roby Head Face node.  These are placed below with versions that support the SBC used by Elsabot.
+# Also needed by Robot Head Face node.  These are placed below with versions that support the SBC used by Elsabot.
 # However, install the official versions to get other dependencies installed also.    
 RUN pip3 install Adafruit-Blinka --break-system-packages && \
     pip3 install Adafruit-PlatformDetect --break-system-packages
@@ -91,6 +95,14 @@ RUN mkdir -p /opt/ms_speech && cd /tmp && \
     tar --strip 1 -xzf SpeechSDK-Linux.tar.gz -C /opt/ms_speech && \
     ls -R /opt/ms_speech && \
     rm /tmp/SpeechSDK-Linux.tar.gz
+
+# Build foxglove bridge
+SHELL ["/bin/bash", "-c"]
+RUN mkdir -p /opt/foxglove && cd /opt/foxglove && \
+    git clone https://github.com/foxglove/foxglove-sdk && \
+    cd foxglove-sdk/ros && \
+    . /opt/ros/${ROS_DISTRO}/setup.bash && \
+    make
 
 # Install ROS dep packages last since the script will be generated after initially building the docker
 # and in the future when deps need to be updated.
