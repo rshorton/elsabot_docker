@@ -9,7 +9,8 @@ echo "Saving deps to: $ROS_DEPS_INSTALL_SCRIPT"
 echo "#!/bin/bash" > $ROS_DEPS_INSTALL_SCRIPT
 
 rosdep update
-rosdep install -si --reinstall --from-path src &>> $ROS_DEPS_INSTALL_SCRIPT
+rosdep install -si --reinstall --from-path src | \
+  awk '/#[apt]*/,0' >> $ROS_DEPS_INSTALL_SCRIPT
 
 sed -i -e 's/get install/get install -y/g' $ROS_DEPS_INSTALL_SCRIPT
 
