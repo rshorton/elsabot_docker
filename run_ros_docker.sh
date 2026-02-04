@@ -19,6 +19,8 @@ SCRIPT_DIR=$(dirname "$0")
 WS_DIR=$(readlink -f ${SCRIPT_DIR}/..)
 echo "WS_DIR = $WS_DIR"
 
+xhost +local:docker
+
 # FIX, is privileged still needed?
 docker run -it --privileged --net=host  --pid=host --ipc=host \
   -e DISPLAY=unix:0 \
@@ -38,6 +40,7 @@ docker run -it --privileged --net=host  --pid=host --ipc=host \
   --device-cgroup-rule='c 189:* rmw' \
   -v /dev/snd:/dev/snd \
   -e PULSE_SERVER=unix:/run/user/1000/pulse/native -v /run/user/1000/pulse:/run/user/1000/pulse \
+  -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:$HOME/.Xauthority -e XAUTHORITY=$HOME/.Xauthority \
   elsabot/jazzy \
    /bin/bash
   
