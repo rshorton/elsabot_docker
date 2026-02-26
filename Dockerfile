@@ -5,9 +5,11 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG ROS_DISTRO=jazzy
 
+SHELL ["/bin/bash", "-c"]
+
 # https://discourse.openrobotics.org/t/ros-signing-key-migration-guide/43937/23
-RUN rm /etc/apt/sources.list.d/ros2-latest.list \
-  && rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg
+RUN if [ -f /etc/apt/sources.list.d/ros2-latest.list ]; then rm /etc/apt/sources.list.d/ros2-latest.list ; fi && \
+    if [ -f /usr/share/keyrings/ros2-latest-archive-keyring.gpg ]; then  rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg ; fi
 
 RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') ;\
     curl -L -s -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" \
@@ -110,7 +112,6 @@ RUN mkdir -p /opt/ms_speech && cd /tmp && \
     rm /tmp/SpeechSDK-Linux.tar.gz
 
 # Build foxglove bridge
-SHELL ["/bin/bash", "-c"]
 RUN mkdir -p /opt/foxglove && cd /opt/foxglove && \
     git clone https://github.com/foxglove/foxglove-sdk && \
     cd foxglove-sdk/ros && \
