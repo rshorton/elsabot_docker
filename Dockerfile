@@ -1,9 +1,20 @@
-ARG BASE_IMAGE=""
+ARG BASE_IMAGE="please_specify"
 FROM ${BASE_IMAGE}
 ARG USERNAME=USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG ROS_DISTRO=jazzy
+
+# https://discourse.openrobotics.org/t/ros-signing-key-migration-guide/43937/23
+RUN rm /etc/apt/sources.list.d/ros2-latest.list \
+  && rm /usr/share/keyrings/ros2-latest-archive-keyring.gpg
+
+RUN export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}') ;\
+    curl -L -s -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" \
+    && apt-get update \
+    && apt-get install /tmp/ros2-apt-source.deb \
+    && rm -f /tmp/ros2-apt-source.deb
+################################################################################    
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
@@ -18,7 +29,8 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip
+RUN apt-get install -y \
+     python3-pip
 
 # libg2o - needed when building/using Nav2 TEB controller
 RUN apt-get install -y \
