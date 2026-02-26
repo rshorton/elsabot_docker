@@ -74,7 +74,7 @@ RUN pip3 install Adafruit-Blinka --break-system-packages && \
     pip3 install Adafruit-PlatformDetect --break-system-packages
 
 # Use modified Adafruit python package to support Odyssey Blue with J4125
-# (Supports already exists for J4105 variant)
+# (Support already exists for J4105 variant)
 RUN mkdir -p /opt/adafruit && cd /opt/adafruit && \
     git clone https://github.com/rshorton/Adafruit_Python_PlatformDetect.git && \
     cd Adafruit_Python_PlatformDetect && \
@@ -84,7 +84,8 @@ RUN mkdir -p /opt/adafruit && cd /opt/adafruit && \
 
 # Install Luxonis Depthai sdk
 RUN wget -qO- https://docs.luxonis.com/install_dependencies.sh | bash
-RUN python3 -m pip install depthai --break-system-packages
+# Stay on API version v2 for now.
+RUN python3 -m pip install depthai==2.* --break-system-packages
 
 # Used by Robot Head Vision node
 RUN pip3 install pyzmq --break-system-package
