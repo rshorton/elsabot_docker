@@ -114,6 +114,7 @@ RUN mkdir -p /opt/ms_speech && cd /tmp && \
     rm /tmp/SpeechSDK-Linux.tar.gz
 
 # Build foxglove bridge
+# 3/1/26 - temporarily using commit e409288 prior to a change that breaks the build
 RUN mkdir -p /opt/foxglove && cd /opt/foxglove && \
     git clone https://github.com/foxglove/foxglove-sdk && \
     cd foxglove-sdk/ros && \
