@@ -122,6 +122,14 @@ RUN mkdir -p /opt/foxglove && cd /opt/foxglove && \
     . /opt/ros/${ROS_DISTRO}/setup.bash && \
     make
 
+# Include INA226 package (used by ina226_power_monitor ROS2 pacage)
+RUN cd /tmp && \
+    git clone https://github.com/elschopi/TI_INA226_micropython.git && \
+    rm /tmp/TI_INA226_micropython/ina_calc_conf.py && \
+    echo -e '[project]\nname = "TI_INA226_micropython"\nversion = "1.0.0"\n' > /tmp/TI_INA226_micropython/pyproject.toml && \
+    cat /tmp/TI_INA226_micropython/pyproject.toml && \
+    python3 -m pip install /tmp/TI_INA226_micropython/. --break-system-packages
+
 # Install ROS dep packages last since the script will be generated after initially building the docker
 # and in the future when deps need to be updated.
 COPY install_ros_dep_packages.sh /opt
