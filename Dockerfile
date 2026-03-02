@@ -117,6 +117,7 @@ RUN mkdir -p /opt/ms_speech && cd /tmp && \
 RUN mkdir -p /opt/foxglove && cd /opt/foxglove && \
     git clone https://github.com/foxglove/foxglove-sdk && \
     cd foxglove-sdk/ros && \
+    git checkout e409288 && \
     . /opt/ros/${ROS_DISTRO}/setup.bash && \
     make
 
