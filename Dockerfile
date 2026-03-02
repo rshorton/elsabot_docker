@@ -84,8 +84,10 @@ RUN addgroup gpio \
 
 # Also needed by Robot Head Face node.  These are placed below with versions that support the SBC used by Elsabot.
 # However, install the official versions to get other dependencies installed also.    
-RUN pip3 install Adafruit-Blinka --break-system-packages && \
-    pip3 install Adafruit-PlatformDetect --break-system-packages
+RUN pip3 install \
+        Adafruit-Blinka \
+        Adafruit-PlatformDetect \
+        adafruit-extended-bus --break-system-packages
 
 # Use modified Adafruit python package to support Odyssey Blue with J4125
 # (Support already exists for J4105 variant)
