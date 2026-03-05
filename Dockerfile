@@ -148,6 +148,8 @@ RUN /opt/install_ros_dep_packages.sh
 WORKDIR /robot_ws
 USER $USERNAME
 
+ENV ELSABOT_CPU=${CPU}
+
 COPY image_bashrc /home/$USERNAME/.bashrc
 COPY image_bash_profile /home/$USERNAME/.bash_profile
 
