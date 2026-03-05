@@ -36,7 +36,10 @@ docker run -it --privileged --net=host  --pid=host --ipc=host \
   -v /dev/i2c-5:/dev/i2c-5 \
   -v /dev/i2c-6:/dev/i2c-6 \
   -v /dev/i2c-7:/dev/i2c-7 \
+  -v /dev/i2c-8:/dev/i2c-8 \
+  -v /dev/i2c-9:/dev/i2c-9 \
   -v /dev/i2c-10:/dev/i2c-10 \
+  -v /dev/i2c-20:/dev/i2c-20 \
   -v /dev/bus/usb:/dev/bus/usb \
   --device-cgroup-rule='c 189:* rmw' \
   -v /dev/snd:/dev/snd \

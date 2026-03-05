@@ -2,9 +2,11 @@
 
 IMAGE_NAME=elsabot/jazzy
 SUPPORT_ARM=n
+# CPU either seeed_odyssey or jetson_agx
+CPU=seeed_odyssey
 
 NO_CACHE_ARG=""
-while getopts ":hna" option; do
+while getopts ":hnac:" option; do
    case $option in
       h) # display Help
          echo "Syntax: -n  New image"
@@ -16,12 +18,17 @@ while getopts ":hna" option; do
       a) # Build for ARMv64 (rpi)
          SUPPORT_ARM=y
          ;;
+      c) # CPU
+         CPU=$OPTARG
+         ;;
      \?) # Invalid option
          echo "Error: Invalid option"
          exit
          ;;
    esac
 done
+
+echo "Building for CPU: ${CPU}, ARM: ${SUPPORT_ARM}"
 
 # Change to the directory where this script is and the Docker file
 THIS_SCRIPT=$(readlink -e "$0")
@@ -46,9 +53,10 @@ else
 fi   
 
 docker build $NO_CACHE_ARG \
-   --build-arg USERNAME=elsabot \
+   --build-arg USERNAME=${USER} \
    --build-arg SUPPORT_ARM=${SUPPORT_ARM} \
    --build-arg BASE_IMAGE=${BASE_IMAGE} \
+   --build-arg CPU=${CPU} \
    -t ${IMAGE_NAME} \
    . \
    2>&1 | tee build.log

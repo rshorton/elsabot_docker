@@ -4,6 +4,7 @@ ARG USERNAME=USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG ROS_DISTRO=jazzy
+ARG CPU="none"
 
 SHELL ["/bin/bash", "-c"]
 
@@ -51,8 +52,8 @@ ENV SHELL=/bin/bash
 
 # For ros2_control so real-time process priorities can be used
 # https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html
-RUN addgroup realtime \
-    && usermod -a -G realtime $USERNAME
+RUN addgroup realtime && \
+    usermod -a -G realtime $USERNAME
 
 RUN echo "@realtime soft rtprio 99 \n\
 @realtime soft priority 99 \n\
@@ -79,8 +80,9 @@ RUN mkdir -p /opt/extra && cd /opt/extra && \
 # Used by 'face' node of robot_head package
 RUN pip3 install adafruit-circuitpython-servokit --break-system-packages
 RUN apt-get install -y python3-libgpiod gpiod python3-smbus python3-dev i2c-tools libi2c-dev wget
-RUN addgroup gpio \
-    && usermod -a -G gpio $USERNAME
+RUN addgroup gpio && \
+    usermod -a -G gpio $USERNAME && \
+    usermod -a -G i2c $USERNAME
 
 # Also needed by Robot Head Face node.  These are placed below with versions that support the SBC used by Elsabot.
 # However, install the official versions to get other dependencies installed also.    
@@ -91,12 +93,20 @@ RUN pip3 install \
 
 # Use modified Adafruit python package to support Odyssey Blue with J4125
 # (Support already exists for J4105 variant)
-RUN mkdir -p /opt/adafruit && cd /opt/adafruit && \
-    git clone https://github.com/rshorton/Adafruit_Python_PlatformDetect.git && \
-    cd Adafruit_Python_PlatformDetect && \
-    git checkout seeed_j4125 && \
-    cd .. && \
-    pip3 install --upgrade Adafruit_Python_PlatformDetect/ --break-system-packages
+RUN if [ $CPU == "seeed_odyssey" ]; then \
+        mkdir -p /opt/adafruit && cd /opt/adafruit && \
+        git clone https://github.com/rshorton/Adafruit_Python_PlatformDetect.git && \
+        cd Adafruit_Python_PlatformDetect && \
+        git checkout seeed_j4125 && \
+        cd .. && \
+        pip3 install --upgrade Adafruit_Python_PlatformDetect/ --break-system-packages; \
+    else \
+        echo "Using default Adafruit platform detect"; \
+    fi
+
+RUN if [ $CPU == "jetson_agx" ]; then \
+        pip install Jetson.GPIO --break-system-packages; \
+    fi
 
 # Install Luxonis Depthai sdk
 RUN wget -qO- https://docs.luxonis.com/install_dependencies.sh | bash
