@@ -47,7 +47,8 @@ RUN apt-get install -y \
     ros-${ROS_DISTRO}-ros2-control \
     ros-${ROS_DISTRO}-ros2-controllers \
     ros-${ROS_DISTRO}-vector-pursuit-controller \
-    ros-${ROS_DISTRO}-libg2o
+    ros-${ROS_DISTRO}-libg2o \
+    ros-${ROS_DISTRO}-behaviortree-cpp-v3
 ENV SHELL=/bin/bash
 
 # For ros2_control so real-time process priorities can be used
@@ -138,7 +139,8 @@ RUN cd /tmp && \
     rm /tmp/TI_INA226_micropython/ina_calc_conf.py && \
     echo -e '[project]\nname = "TI_INA226_micropython"\nversion = "1.0.0"\n' > /tmp/TI_INA226_micropython/pyproject.toml && \
     cat /tmp/TI_INA226_micropython/pyproject.toml && \
-    python3 -m pip install /tmp/TI_INA226_micropython/. --break-system-packages
+    python3 -m pip install /tmp/TI_INA226_micropython/. --break-system-packages && \
+    rm -rf TI_INA226_micropython
 
 # Install ROS dep packages last since the script will be generated after initially building the docker
 # and in the future when deps need to be updated.
