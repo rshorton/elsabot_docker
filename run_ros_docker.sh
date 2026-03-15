@@ -43,6 +43,7 @@ docker run -it --privileged --net=host  --pid=host --ipc=host \
   -v /dev/bus/usb:/dev/bus/usb \
   --device-cgroup-rule='c 189:* rmw' \
   -v /dev/snd:/dev/snd \
+  --device /dev/snd \
   -e PULSE_SERVER=unix:/run/user/1000/pulse/native -v /run/user/1000/pulse:/run/user/1000/pulse \
   -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:$HOME/.Xauthority -e XAUTHORITY=$HOME/.Xauthority \
   elsabot/jazzy \

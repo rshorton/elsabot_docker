@@ -142,6 +142,12 @@ RUN cd /tmp && \
     python3 -m pip install /tmp/TI_INA226_micropython/. --break-system-packages && \
     rm -rf TI_INA226_micropython
 
+# Install pulseaudio client libraries inside the container
+RUN apt-get update && apt-get install -y \
+        pulseaudio-utils \
+        alsa-utils \
+        python3-pyaudio
+
 # Install ROS dep packages last since the script will be generated after initially building the docker
 # and in the future when deps need to be updated.
 COPY install_ros_dep_packages.sh /opt
