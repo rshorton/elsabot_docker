@@ -150,6 +150,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN python3 -m pip install azure-cognitiveservices-speech --break-system-packages
 
+# For speech_input package - add to package depends
+RUN python3 -m pip install asyncio websockets httpx --break-system-packages
+
 # Install ROS dep packages last since the script will be generated after initially building the docker
 # and in the future when deps need to be updated.
 COPY install_ros_dep_packages.sh /opt
