@@ -26,6 +26,7 @@ docker run -it --privileged --net=host  --pid=host --ipc=host \
   -e HOST_WS_DIR=${WS_DIR} \
   -e DISPLAY=unix:0 \
   -v ${WS_DIR}:/robot_ws \
+  -v /etc/localtime:/etc/localtime:ro -v /etc/timezone:/etc/timezone:ro \
   -v /dev/elsabot_dev_links:/dev/elsabot_dev_links \
   -v /dev/input:/dev/input \
   -v /dev/i2c-0:/dev/i2c-0 \
