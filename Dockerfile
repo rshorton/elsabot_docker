@@ -48,7 +48,12 @@ RUN apt-get install -y \
     ros-${ROS_DISTRO}-ros2-controllers \
     ros-${ROS_DISTRO}-vector-pursuit-controller \
     ros-${ROS_DISTRO}-libg2o \
-    ros-${ROS_DISTRO}-behaviortree-cpp-v3
+    ros-${ROS_DISTRO}-behaviortree-cpp-v3 \
+    ros-${ROS_DISTRO}-image-transport \
+    ros-${ROS_DISTRO}-image-transport-plugins \
+    ros-${ROS_DISTRO}-cv-bridge \
+    ccache
+
 ENV SHELL=/bin/bash
 
 # For ros2_control so real-time process priorities can be used
@@ -148,13 +153,15 @@ RUN apt-get update && apt-get install -y \
         alsa-utils \
         python3-pyaudio
 
-RUN python3 -m pip install azure-cognitiveservices-speech --break-system-packages
-
-# For speech_input package - add to package depends
-RUN python3 -m pip install asyncio websockets httpx --break-system-packages
-
-# For audio output package
-RUN python3 -m pip install emoji regex --break-system-packages
+# For speech and audio output packages        
+RUN python3 -m pip install \
+        azure-cognitiveservices-speech \
+        asyncio \
+        websockets \
+        httpx \
+        emoji \
+        regex \
+        --break-system-packages
 
 # Install ROS dep packages last since the script will be generated after initially building the docker
 # and in the future when deps need to be updated.
