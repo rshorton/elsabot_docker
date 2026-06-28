@@ -39,7 +39,7 @@ Run:
 cd ~/robot_ws
 elsabot_docker/build_ros_docker.sh
 ```
-To build for arm64 specify the -a option.
+You can also specify '-c CPU' to specify the CPU to support.  This is currently used for selecting GPIO related packages and guiding the use of board-specific devices such as I2C.  The current CPU types supported are: none, seeed_odyssey, jetson_agx.  By default 'jetson_agx' is used.  To build for arm64 specify the -a option.
 ```
 elsabot_docker/build_ros_docker.sh -a
 ```
