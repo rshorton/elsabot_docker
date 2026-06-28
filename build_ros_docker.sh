@@ -3,7 +3,7 @@
 IMAGE_NAME=elsabot/jazzy
 SUPPORT_ARM=n
 # CPU either seeed_odyssey or jetson_agx
-CPU=seeed_odyssey
+CPU=jetson_agx
 
 NO_CACHE_ARG=""
 while getopts ":hnac:" option; do
@@ -27,6 +27,10 @@ while getopts ":hnac:" option; do
          ;;
    esac
 done
+
+if [ $CPU == 'jetson_agx' ]; then
+   SUPPORT_ARM=y
+fi   
 
 echo "Building for CPU: ${CPU}, ARM: ${SUPPORT_ARM}"
 
