@@ -1,6 +1,8 @@
 #!/bin/bash
 
-IMAGE_NAME=elsabot/jazzy
+ROS_VER="lyrical"
+
+IMAGE_NAME=elsabot/${ROS_VER}
 SUPPORT_ARM=n
 # CPU either seeed_odyssey or jetson_agx
 CPU=jetson_agx
@@ -49,10 +51,10 @@ if [ ! -e $ROS_DEPS_INSTALL_SCRIPT ]; then
 fi
 
 if [ $SUPPORT_ARM == 'y' ]; then
-   BASE_IMAGE="arm64v8/ros:jazzy-ros-base"
+   BASE_IMAGE="arm64v8/ros:${ROS_VER}-ros-base"
    echo "Building for arm64"
 else
-   BASE_IMAGE="osrf/ros:jazzy-desktop-full"
+   BASE_IMAGE="osrf/ros:${ROS_VER}-desktop-full"
    echo "Building for x86"
 fi   
 
@@ -61,6 +63,7 @@ docker build $NO_CACHE_ARG \
    --build-arg SUPPORT_ARM=${SUPPORT_ARM} \
    --build-arg BASE_IMAGE=${BASE_IMAGE} \
    --build-arg CPU=${CPU} \
+   --build-arg ROS_DISTRO=${ROS_VER} \
    -t ${IMAGE_NAME} \
    . \
    2>&1 | tee build.log

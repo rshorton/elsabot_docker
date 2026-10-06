@@ -1,4 +1,4 @@
-# Elsabot ROS2 Jazzy Docker Environment
+# Elsabot ROS2 Lyrical Docker Environment
 
 This repo contains files to build and run a ROS docker container for the Elsabot robot.
 
@@ -25,7 +25,7 @@ Clone any other repos needed such as elsabot_4wd and its dependencies in the src
  
 micro_ros is used so clone it also:
 ```
-git clone -b jazzy https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
+git clone -b lyrical https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
 ```
 
 As an alternative to the above, use the get_elsabot_repos.sh script from
@@ -69,13 +69,15 @@ elsabot_docker/build_ros_docker.sh
 This will install the dependencies into the image.  After it finishes, run the docker again, and then build the Elsabot packages (ros2_build is a convenience alias):
 
 ```
+cd ~/robot_ws
+elsabot_docker/run_ros_docker.sh
 ros2_build
 source install/setup.bash
 ```
 
 ## micros_ros related
 See:
-    https://github.com/micro-ROS/micro_ros_setup/blob/jazzy/README.md
+    https://github.com/micro-ROS/micro_ros_setup/blob/lyrical/README.md
 
 The micro_ros source is cloned in a step above and the dependencies are installed above too. To create the agent:
 

@@ -3,10 +3,11 @@ FROM ${BASE_IMAGE}
 ARG USERNAME=USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-ARG ROS_DISTRO=jazzy
 ARG CPU="none"
+ARG ROS_DISTRO=lyrical
 
 SHELL ["/bin/bash", "-c"]
+
 
 # https://discourse.openrobotics.org/t/ros-signing-key-migration-guide/43937/23
 RUN if [ -f /etc/apt/sources.list.d/ros2-latest.list ]; then rm /etc/apt/sources.list.d/ros2-latest.list ; fi && \
@@ -40,18 +41,16 @@ RUN apt-get install -y \
     ros-${ROS_DISTRO}-navigation2 \
     ros-${ROS_DISTRO}-moveit \
     ros-${ROS_DISTRO}-nav2-bringup \
-    ros-${ROS_DISTRO}-rplidar-ros \
     ros-${ROS_DISTRO}-laser-filters \
     ros-${ROS_DISTRO}-robot-localization \
     ros-${ROS_DISTRO}-joy-linux \
     ros-${ROS_DISTRO}-ros2-control \
     ros-${ROS_DISTRO}-ros2-controllers \
-    ros-${ROS_DISTRO}-vector-pursuit-controller \
     ros-${ROS_DISTRO}-libg2o \
-    ros-${ROS_DISTRO}-behaviortree-cpp-v3 \
     ros-${ROS_DISTRO}-image-transport \
     ros-${ROS_DISTRO}-image-transport-plugins \
     ros-${ROS_DISTRO}-cv-bridge \
+    ros-${ROS_DISTRO}-foxglove-bridge \
     ccache
 
 ENV SHELL=/bin/bash
@@ -115,28 +114,24 @@ RUN if [ $CPU == "jetson_agx" ]; then \
     fi
 
 # Install Luxonis Depthai sdk
-RUN wget -qO- https://docs.luxonis.com/install_dependencies.sh | bash
+# Use workaround for dependencies not installing.  
+RUN apt install -y libopenblas-dev
+#RUN wget -qO- https://docs.luxonis.com/install_dependencies.sh | bash
 # Stay on API version v2 for now.
 RUN python3 -m pip install depthai==2.* --break-system-packages
+
 
 # Used by Robot Head Vision node
 RUN pip3 install pyzmq --break-system-package
 
 # MS Speech SDK
-RUN mkdir -p /opt/ms_speech && cd /tmp && \
-    wget -O SpeechSDK-Linux.tar.gz https://aka.ms/csspeech/linuxbinary && \
-    tar --strip 1 -xzf SpeechSDK-Linux.tar.gz -C /opt/ms_speech && \
-    ls -R /opt/ms_speech && \
-    rm /tmp/SpeechSDK-Linux.tar.gz
-
-# Build foxglove bridge
-# 3/1/26 - temporarily using commit e409288 prior to a change that breaks the build
-RUN mkdir -p /opt/foxglove && cd /opt/foxglove && \
-    git clone https://github.com/foxglove/foxglove-sdk && \
-    cd foxglove-sdk/ros && \
-    git checkout e409288 && \
-    . /opt/ros/${ROS_DISTRO}/setup.bash && \
-    make
+RUN if [ $CPU == "seeed_odyssey" ]; then \
+        mkdir -p /opt/ms_speech && cd /tmp && \
+        wget -O SpeechSDK-Linux.tar.gz https://aka.ms/csspeech/linuxbinary && \
+        tar --strip 1 -xzf SpeechSDK-Linux.tar.gz -C /opt/ms_speech && \
+        ls -R /opt/ms_speech && \
+        rm /tmp/SpeechSDK-Linux.tar.gz; \
+    fi
 
 # Include INA226 package (used by ina226_power_monitor ROS2 pacage)
 RUN cd /tmp && \
@@ -161,7 +156,8 @@ RUN python3 -m pip install \
         httpx \
         emoji \
         regex \
-        --break-system-packages
+        --break-system-packages \
+        --ignore-installed
 
 # Install ROS dep packages last since the script will be generated after initially building the docker
 # and in the future when deps need to be updated.

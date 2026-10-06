@@ -1,7 +1,7 @@
 #!/bin/bash
 # Open a shell into the already running Elsabot container.  Use run_ros_docker.sh first.
 
-IMAGE_NAME=elsabot/jazzy
+IMAGE_NAME=elsabot/lyrical
 
 CONTAINER_ID=$(docker container ls -a | grep $IMAGE_NAME | cut -d" " -f1 | head -n 1)
 echo Container ID:  $CONTAINER_ID
