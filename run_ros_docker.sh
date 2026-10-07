@@ -23,6 +23,8 @@ xhost +local:docker
 
 # FIX, is privileged still needed?
 docker run -it --privileged --net=host  --pid=host --ipc=host \
+  --cap-add=SYS_NICE \
+  --ulimit rtprio=99 \
   -e HOST_WS_DIR=${WS_DIR} \
   -e DISPLAY=unix:0 \
   -v ${WS_DIR}:/robot_ws \
