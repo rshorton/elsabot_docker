@@ -32,12 +32,13 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y \
      python3-pip
 
-# libg2o - needed when building/using Nav2 TEB controller
-RUN apt-get install -y \
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install -y \
     ros-${ROS_DISTRO}-navigation2 \
     ros-${ROS_DISTRO}-moveit \
     ros-${ROS_DISTRO}-nav2-bringup \
@@ -60,7 +61,7 @@ ENV SHELL=/bin/bash
 RUN addgroup realtime && \
     usermod -a -G realtime $USERNAME
 
-RUN echo "@realtime soft rtprio 99 \n\
+RUN echo -e "@realtime soft rtprio 99 \n\
 @realtime soft priority 99 \n\
 @realtime soft memlock 102400 \n\
 @realtime hard rtprio 99 \n\
